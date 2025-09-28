@@ -61,10 +61,19 @@ LOGIN_REDIRECT_URL = 'home'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'neondb',  # database name from your connection string
+        'USER': 'neondb_owner',
+        'PASSWORD': 'npg_3k8ESCMZbrUJ',
+        'HOST': 'ep-shiny-voice-ad1ij9eo-pooler.c-2.us-east-1.aws.neon.tech',
+        'PORT': '5432',  # default PostgreSQL port
+        'OPTIONS': {
+            'sslmode': 'require',
+            'channel_binding': 'require',
+        },
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
