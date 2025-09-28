@@ -22,7 +22,4 @@ cloudinary>=1.41.0
 # Data & CSV Handling
 pandas>=2.2.2
 
-# Payments & Security
-razorpay>=1.4
-pyjwt>=2.9.0
-cryptography>=43.0.1
+djangorestframework==3.20.0
