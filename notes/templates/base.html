@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>{% block title %}Stitch Design{% endblock %}</title>
+    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+    <link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter:wght@400;500;700;900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+    <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#137fec",
+                "background-light": "#f6f7f8",
+                "background-dark": "#101922",
+              },
+              fontFamily: {
+                "display": ["Inter"]
+              },
+              borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+              },
+            },
+          },
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="flex flex-col h-screen justify-between">
+    
+    <!-- Main Content -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+<!-- Footer -->
+<footer class="fixed bottom-0 left-0 w-full bg-background-light dark:bg-background-dark border-t border-gray-200 dark:border-gray-800 z-50">
+    <nav class="flex justify-around items-center px-4 py-2">
+        <a class="flex flex-col items-center gap-1 {% if request.path == '/' %}text-primary{% else %}text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary{% endif %}" href="/">
+            <span class="material-symbols-outlined text-2xl">home</span>
+            <span class="text-xs font-medium">Home</span>
+        </a>
+        <a class="flex flex-col items-center gap-1 {% if request.path == '/home/' %}text-primary{% else %}text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary{% endif %}" href="{% url 'paper:home' %}">
+            <span class="material-symbols-outlined text-2xl">description</span>
+            <span class="text-xs font-medium">My Notes</span>
+        </a>
+        <a class="flex flex-col items-center gap-1 {% if request.path == '/settings/' %}text-primary{% else %}text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary{% endif %}" href="/settings/">
+            <span class="material-symbols-outlined text-2xl">settings</span>
+            <span class="text-xs font-medium">Settings</span>
+        </a>
+    </nav>
+</footer>
+
+
+</div>
+
+{% block extra_scripts %}{% endblock %}
+<script>
+    // Theme initialization - must be in <head> before <body>
+    (function() {
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        let theme;
+        if (savedTheme === 'light' || savedTheme === 'dark') {
+            theme = savedTheme;
+        } else if (savedTheme === 'auto' || !savedTheme) {
+            theme = systemPrefersDark ? 'dark' : 'light';
+        }
+        
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Account Details</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    
+    <!-- Theme initialization script - must run before body renders -->
+    <script>
+        // Theme initialization - runs immediately to prevent flash
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            let theme;
+            if (savedTheme === 'light' || savedTheme === 'dark') {
+                theme = savedTheme;
+            } else {
+                // Default to system preference
+                theme = systemPrefersDark ? 'dark' : 'light';
+            }
+            
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: "class", // Use class-based dark mode for manual control
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+        
+        body {
+            min-height: max(884px, 100dvh);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background-color: #e5e7eb;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .theme-toggle.dark {
+            background-color: #374151;
+        }
+        
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 26px;
+            height: 26px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .theme-toggle.dark::before {
+            transform: translateX(30px);
+            background-color: #1f2937;
+        }
+        
+        .theme-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .sun-icon {
+            left: 6px;
+            color: #f59e0b;
+        }
+        
+        .moon-icon {
+            right: 6px;
+            color: #60a5fa;
+            opacity: 0;
+        }
+        
+        .theme-toggle.dark .sun-icon {
+            opacity: 0;
+        }
+        
+        .theme-toggle.dark .moon-icon {
+            opacity: 1;
+        }
+
+        /* Auto theme option styles */
+        .theme-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .theme-option:hover {
+            background-color: #f3f4f6;
+        }
+
+        .dark .theme-option:hover {
+            background-color: #374151;
+        }
+
+        .theme-option.active {
+            border-color: #137fec;
+            background-color: #eff6ff;
+        }
+
+        .dark .theme-option.active {
+            background-color: #1e40af1a;
+        }
+
+        .theme-selector {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            z-index: 50;
+            min-width: 200px;
+            margin-top: 8px;
+        }
+
+        .dark .theme-selector {
+            background: #1f2937;
+            border-color: #374151;
+        }
+
+        .theme-selector.show {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-zinc-900 dark:text-zinc-100">
+    <div class="flex flex-col h-screen justify-between">
+        <div>
+            <header class="sticky top-5 z-10 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md shadow-sm p-4">
+
+                <!-- Centered heading -->
+                <h1 class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                    Account
+                </h1>
+            
+                <!-- Logout button on right -->
+                <button id="logoutBtn" class="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center gap-2 px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                    <span class="material-symbols-outlined text-xl">logout</span>
+                    <span class="text-sm font-medium">Logout</span>
+                </button>
+            </header>
+            
+            
+            <div class="p-6 flex flex-col items-center text-center">
+                <div class="relative mb-4">
+                    <img alt="Profile Picture" class="w-28 h-28 rounded-full object-cover border-4 border-white dark:border-zinc-800 shadow-lg" src="https://imgs.search.brave.com/F3S732RuH1idxV7dDfEqAM9vKEJhhxQ-XP8pb4iaOmM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzllLzgz/Lzc1LzllODM3NTI4/ZjAxY2YzZjQyMTE5/YzVhZWVlZDFiMzM2/LmpwZw"/>
+                </div>
+                <h2 class="text-xl font-bold text-zinc-900 dark:text-zinc-100">{{request.user.username}}</h2>
+            </div>
+            
+            <div class="px-4 space-y-3">
+                <!-- Theme Toggle Section -->
+                <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-700">
+                    <div class="flex items-center justify-between gap-4 p-4">
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/30 w-12 h-12">
+                                <span class="material-symbols-outlined text-xl text-blue-600 dark:text-blue-400" id="themeIcon">light_mode</span>
+                            </div>
+                            <div>
+                                <p class="text-base font-medium text-zinc-900 dark:text-white">Theme</p>
+                                <p class="text-sm text-zinc-500 dark:text-zinc-400">Choose your preferred appearance</p>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <button id="themeButton" class="flex items-center gap-3 px-3 py-2 bg-zinc-100 dark:bg-zinc-700 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-600 transition-colors">
+                                <span class="text-sm text-zinc-500 dark:text-zinc-400" id="themeLabel">Auto</span>
+                                <span class="material-symbols-outlined text-zinc-400 dark:text-zinc-500 text-lg">expand_more</span>
+                            </button>
+                            
+                            <div id="themeSelector" class="theme-selector">
+                                <div class="p-2">
+                                    <div class="theme-option" data-theme="auto">
+                                        <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">auto_mode</span>
+                                        <div>
+                                            <div class="font-medium text-zinc-900 dark:text-white">Auto</div>
+                                            <div class="text-sm text-zinc-500 dark:text-zinc-400">Follow system</div>
+                                        </div>
+                                    </div>
+                                    <div class="theme-option" data-theme="light">
+                                        <span class="material-symbols-outlined text-yellow-500">light_mode</span>
+                                        <div>
+                                            <div class="font-medium text-zinc-900 dark:text-white">Light</div>
+                                            <div class="text-sm text-zinc-500 dark:text-zinc-400">Always light</div>
+                                        </div>
+                                    </div>
+                                    <div class="theme-option" data-theme="dark">
+                                        <span class="material-symbols-outlined text-blue-400">dark_mode</span>
+                                        <div>
+                                            <div class="font-medium text-zinc-900 dark:text-white">Dark</div>
+                                            <div class="text-sm text-zinc-500 dark:text-zinc-400">Always dark</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy Settings -->
+                <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-700">
+                    <a class="flex items-center gap-4 p-4 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 transition-colors rounded-xl" href="#">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+                            <span class="material-symbols-outlined text-xl">shield</span>
+                        </div>
+                        
+                        <div class="flex-1">
+                            <p class="text-base font-medium text-zinc-900 dark:text-white">Privacy Settings</p>
+                            <p class="text-sm text-zinc-500 dark:text-zinc-400">Manage your privacy preferences</p>
+                        </div>
+                        <span class="material-symbols-outlined text-zinc-400 dark:text-zinc-500 text-xl">chevron_right</span>
+                    </a>
+                </div>
+
+                <!-- Delete Account -->
+<!-- Delete Account Section -->
+<div class="bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-700">
+    <button id="deleteBtn" class="flex items-center gap-4 p-4 w-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors rounded-xl">
+        <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-red-100 dark:bg-red-900/30 text-red-500">
+            <span class="material-symbols-outlined text-xl">delete_forever</span>
+        </div>
+        <div class="flex-1 text-left">
+            <p class="text-base font-medium text-red-500">Delete Account</p>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400">Permanently delete your account</p>
+        </div>
+        <span class="material-symbols-outlined text-zinc-400 dark:text-zinc-500 text-xl">chevron_right</span>
+    </button>
+</div>
+<div id="deleteModal" class="fixed inset-0 bg-black/30 flex items-center justify-center z-50 hidden">
+    <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 w-80 flex flex-col items-center shadow-lg">
+        <span class="material-symbols-outlined text-4xl text-red-500 mb-4">warning</span>
+        <p class="text-lg font-medium text-zinc-900 dark:text-zinc-100 mb-2 text-center">Delete Account?</p>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-4 text-center">
+            Are you sure you want to permanently delete your account? This action cannot be undone.
+        </p>
+        <div class="flex gap-4">
+            <button id="cancelDelete" class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-zinc-900 dark:text-zinc-100">Cancel</button>
+            <form method="POST" action="{% url 'accounts:delete_account' %}">
+                {% csrf_token %}
+                <button type="submit" class="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        
+        <nav class="flex justify-around items-center px-4 py-2">
+            <a class="flex flex-col items-center gap-1 {% if request.path == '/' %}text-primary{% else %}text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary{% endif %}" href="/">
+                <span class="material-symbols-outlined text-2xl">home</span>
+                <span class="text-xs font-medium">Home</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 {% if request.path == '/home/' %}text-primary{% else %}text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary{% endif %}" href="{% url 'paper:home' %}">
+                <span class="material-symbols-outlined text-2xl">description</span>
+                <span class="text-xs font-medium">My Notes</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 {% if request.path == '/settings/' %}text-primary{% else %}text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary{% endif %}" href="/settings/">
+                <span class="material-symbols-outlined text-2xl">settings</span>
+                <span class="text-xs font-medium">Settings</span>
+            </a>
+        </nav>
+
+    </div>
+
+    <script>
+        // Global theme management system
+        window.ThemeManager = {
+            init: function() {
+                this.themeButton = document.getElementById('themeButton');
+                this.themeSelector = document.getElementById('themeSelector');
+                this.themeLabel = document.getElementById('themeLabel');
+                this.themeIcon = document.getElementById('themeIcon');
+                this.html = document.documentElement;
+                
+                this.bindEvents();
+                this.updateUI();
+                this.listenToSystemChanges();
+            },
+            
+            getCurrentTheme: function() {
+                const saved = localStorage.getItem('theme');
+                if (saved && ['light', 'dark', 'auto'].includes(saved)) {
+                    return saved;
+                }
+                return 'auto'; // default
+            },
+            
+            getEffectiveTheme: function() {
+                const current = this.getCurrentTheme();
+                if (current === 'auto') {
+                    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                }
+                return current;
+            },
+            
+            setTheme: function(theme) {
+                localStorage.setItem('theme', theme);
+                this.applyTheme();
+                this.updateUI();
+                
+                // Dispatch custom event for other parts of the app
+                window.dispatchEvent(new CustomEvent('themechange', { 
+                    detail: { theme: theme, effective: this.getEffectiveTheme() }
+                }));
+            },
+            
+            applyTheme: function() {
+                const effective = this.getEffectiveTheme();
+                if (effective === 'dark') {
+                    this.html.classList.add('dark');
+                } else {
+                    this.html.classList.remove('dark');
+                }
+            },
+            
+            updateUI: function() {
+                const current = this.getCurrentTheme();
+                const effective = this.getEffectiveTheme();
+                
+                // Update label and icon
+                const labels = { auto: 'Auto', light: 'Light', dark: 'Dark' };
+                const icons = { 
+                    auto: 'auto_mode',
+                    light: 'light_mode', 
+                    dark: 'dark_mode'
+                };
+                
+                this.themeLabel.textContent = labels[current];
+                this.themeIcon.textContent = icons[effective];
+                
+                // Update active option
+                document.querySelectorAll('.theme-option').forEach(option => {
+                    option.classList.toggle('active', option.dataset.theme === current);
+                });
+            },
+            
+            bindEvents: function() {
+                // Toggle selector
+                this.themeButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.themeSelector.classList.toggle('show');
+                });
+                
+                // Close selector when clicking outside
+                document.addEventListener('click', () => {
+                    this.themeSelector.classList.remove('show');
+                });
+                
+                // Theme option selection
+                document.querySelectorAll('.theme-option').forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const theme = option.dataset.theme;
+                        this.setTheme(theme);
+                        this.themeSelector.classList.remove('show');
+                    });
+                });
+            },
+            
+            listenToSystemChanges: function() {
+                if (window.matchMedia) {
+                    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                    mediaQuery.addListener(() => {
+                        if (this.getCurrentTheme() === 'auto') {
+                            this.applyTheme();
+                            this.updateUI();
+                        }
+                    });
+                }
+            }
+        };
+        
+        // Initialize theme system when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            window.ThemeManager.init();
+        });
+    // Delete modal functionality
+    const deleteBtn = document.getElementById('deleteBtn');
+    const deleteModal = document.getElementById('deleteModal');
+    const cancelDelete = document.getElementById('cancelDelete');
+
+    deleteBtn.addEventListener('click', () => {
+        deleteModal.classList.remove('hidden');
+    });
+
+    cancelDelete.addEventListener('click', () => {
+        deleteModal.classList.add('hidden');
+    });
+
+    // Close modal on clicking outside the content
+    deleteModal.addEventListener('click', (e) => {
+        if (e.target === deleteModal) deleteModal.classList.add('hidden');
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Login | My Notes{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center min-h-screen p-4">
+  <div class="w-full max-w-sm mx-auto">
+    <div class="text-center mb-10">
+      <svg class="mx-auto h-12 w-auto text-primary" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM18 20H6V4H13V9H18V20Z"></path>
+      </svg>
+      <h1 class="mt-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+        My Notes
+      </h1>
+      <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        Sign in to access your notes.
+      </p>
+    </div>
+
+    <form class="space-y-6" method="POST" action="{% url 'accounts:auth' %}">
+      {% csrf_token %}
+      <div>
+        <label class="sr-only" for="username">Username</label>
+        <input autocomplete="username" name="username" id="username" placeholder="Username" required
+               class="form-input w-full rounded-lg border-0 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white
+                      focus:ring-2 focus:ring-inset focus:ring-primary h-12 p-4 placeholder-gray-500 dark:placeholder-gray-400"/>
+      </div>
+      <div>
+        <label class="sr-only" for="password">Password</label>
+        <input autocomplete="current-password" name="password" id="password" placeholder="Password" required
+               type="password"
+               class="form-input w-full rounded-lg border-0 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white
+                      focus:ring-2 focus:ring-inset focus:ring-primary h-12 p-4 placeholder-gray-500 dark:placeholder-gray-400"/>
+      </div>
+      <div>
+        <button type="submit"
+                class="flex w-full justify-center rounded-lg bg-primary px-3 py-3 text-base font-semibold leading-6 text-white
+                       shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+          Login
+        </button>
+      </div>
+    </form>
+
+    {% if messages %}
+      <div id="messages-container" class="fixed top-4 right-4 space-y-2 z-50">
+        {% for message in messages %}
+          <div class="px-4 py-2 rounded shadow
+                      {% if message.tags == 'error' %}bg-red-100 text-red-700{% endif %}
+                      {% if message.tags == 'success' %}bg-green-100 text-green-700{% endif %}
+                      {% if message.tags == 'warning' %}bg-yellow-100 text-yellow-700{% endif %}
+                      {% if message.tags == 'info' %}bg-blue-100 text-blue-700{% endif %}
+                      transition-opacity duration-500 opacity-100">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+
+      <script>
+        // Auto fade out messages after 3 seconds
+        setTimeout(() => {
+          const container = document.getElementById('messages-container');
+          if(container){
+            container.querySelectorAll('div').forEach(msg => {
+              msg.classList.add('opacity-0');
+              setTimeout(() => msg.remove(), 500);
+            });
+          }
+        }, 3000);
+      </script>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

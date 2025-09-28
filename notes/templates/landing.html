@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Home | Stitch Design{% endblock %}
+
+{% block content %}
+<div class="flex flex-col h-screen justify-between">
+    <main class="flex-grow flex flex-col items-center justify-center text-center px-4 pt-8">
+    <div class="w-full max-w-sm mx-auto">
+    <div class="relative w-full h-64 mb-8">
+    <img alt="Abstract background image representing notes and ideas" class="absolute inset-0 w-full h-full object-cover rounded-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMTEO0ZadhnJ9mvUxSKZiur39bWMS2D9WX9d73aMwbBDAitdJsqXWllXvzNouXQTmsX0koy8hti6IGwXPFINE6MD7hAPpI2C2FN7UqoPRLR9e_6hgVn15rE4xa3XvuRJTRdsba0_upd49oemlbAuP5Jrx0c-xv87_oIlauID_xCaSkhVXHxa-02kiPe29vnR9izyjEIeczq2re5-3Sf6488Gqs1VD7q1kNP-smRcTxwdLaZ62wfOxHGdcoVx_szJ08S8nLV_cXpkci"/>
+    </div>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Your notes, everywhere</h1>
+    <p class="mt-4 text-base text-gray-600 dark:text-gray-300">Capture thoughts, ideas, and to-dos effortlessly. Access them on any device, anytime.</p>
+    <div class="mt-10">
+    <a class="w-full inline-block bg-primary text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-opacity-90 transition-colors" href="{% url 'paper:home' %}">
+                Get Started
+              </a>
+    </div>
+    </div>
+    </main>
+</div>
+{% endblock %}
