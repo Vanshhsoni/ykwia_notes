@@ -22,4 +22,4 @@ cloudinary>=1.41.0
 # Data & CSV Handling
 pandas>=2.2.2
 
-djangorestframework==3.20.0
+djangorestframework==3.16.0
