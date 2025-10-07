@@ -79,20 +79,14 @@ LOGOUT_REDIRECT_URL = 'landing'
 LOGIN_REDIRECT_URL = 'home'
 
 # -----------------------------
-# Database (Neon PostgreSQL)
-# -----------------------------
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'neondb',
-        'USER': 'neondb_owner',
-        'PASSWORD': 'npg_3k8ESCMZbrUJ',
-        'HOST': 'ep-shiny-voice-ad1ij9eo-pooler.c-2.us-east-1.aws.neon.tech',
+        'NAME': 'notes_db',
+        'USER': 'postgres',
+        'PASSWORD': 'admin123',
+        'HOST': 'ykwia-notes.duckdns.org',  # DuckDNS hostname
         'PORT': '5432',
-        'OPTIONS': {
-            'sslmode': 'require',
-            'channel_binding': 'require',
-        },
     }
 }
 
